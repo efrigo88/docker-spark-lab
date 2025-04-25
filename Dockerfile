@@ -15,6 +15,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set working directory
 WORKDIR /app
 
+# Create data directories
+RUN mkdir -p /app/data/input /app/data/output/
+
 # Install uv
 RUN pip install uv
 
@@ -23,7 +26,8 @@ COPY pyproject.toml .
 RUN uv pip install --system -e .
 
 # Copy application code
+COPY src/ src/
 COPY . .
 
 # Default command to run your script
-CMD ["python", "main.py"]
+CMD ["python", "-m", "src.main"]

@@ -1,0 +1,9 @@
+services:
+  spark-lab:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./data:/app/data
+    # keep container running, only for development
+    command: tail -f /dev/null

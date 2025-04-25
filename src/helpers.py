@@ -11,23 +11,17 @@ schema = T.StructType(
     ]
 )
 
+# Create Spark session
 spark = (
     SparkSession.builder.appName("TestSpark")
     .master("local[4]")
     .config("spark.driver.memory", "8g")
     .config("spark.sql.shuffle.partitions", "4")
+    .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+    .config(
+        "spark.sql.catalog.spark_catalog",
+        "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+    )
+    .config("spark.jars.packages", "io.delta:delta-spark_2.12:3.2.0")
     .getOrCreate()
 )
-
-# Read JSON file with schema and multiLine option
-df = (
-    spark.read.option("multiLine", "true")
-    .schema(schema)
-    .json("sample_data.json")
-)
-
-# Show the data
-print("Sample Data:")
-df.show()
-
-spark.stop()
