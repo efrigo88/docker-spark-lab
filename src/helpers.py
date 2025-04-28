@@ -1,3 +1,4 @@
+import os
 from pyspark.sql import SparkSession
 import pyspark.sql.types as T
 
@@ -14,9 +15,9 @@ schema = T.StructType(
 # Create Spark session
 spark = (
     SparkSession.builder.appName("TestSpark")
-    .master("local[4]")
-    .config("spark.driver.memory", "8g")
-    .config("spark.sql.shuffle.partitions", "4")
+    .master(os.environ["THREADS"])
+    .config("spark.driver.memory", os.environ["DRIVER_MEMORY"])
+    .config("spark.sql.shuffle.partitions", os.environ["SHUFFLE_PARTITIONS"])
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
     .config(
         "spark.sql.catalog.spark_catalog",
